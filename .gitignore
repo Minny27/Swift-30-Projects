@@ -34,9 +34,6 @@ DerivedData/
 timeline.xctimeline
 playground.xcworkspace
 
-## Mac
-.DS_Store
-
 # Swift Package Manager
 #
 # Add this line if you want to avoid checking in source code from Swift Package Manager dependencies.
@@ -91,3 +88,6 @@ fastlane/test_output
 # https://github.com/johnno1962/injectionforxcode
 
 iOSInjectionProject/
+
+## Mac
+.DS_Store
