@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import NaverThirdPartyLogin
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -13,12 +14,42 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        let instance = NaverThirdPartyLoginConnection.getSharedInstance()
+        
+        // 네이버 앱으로 인증
+        instance?.isNaverAppOauthEnable = true
+        
+        // SafariViewController로 인증
+        instance?.isInAppOauthEnable = true
+        
+        // 인증 화면 세로 모드로 설정
+        instance?.isOnlyPortraitSupportedInIphone()
+        
+        // 앱 등록할 때 입력한 URL Scheme
+        instance?.serviceUrlScheme = kServiceAppUrlScheme
+        
+        // 앱 등록 후 발급 받은 클라이언트 아이디
+        instance?.consumerKey = kConsumerKey
+        
+        // 앱 등록 후 발급 받은 클라이언트 시크릿
+        instance?.consumerSecret = kConsumerSecret
+        
+        // 앱 이름
+        instance?.appName = kServiceAppName
+        
         return true
     }
 
     // MARK: UISceneSession Lifecycle
-
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        NaverThirdPartyLoginConnection
+            .getSharedInstance()
+            .application(app, open: url, options: options)
+        return true
+    }
+    
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         // Called when a new scene session is being created.
         // Use this method to select a configuration to create the new scene with.
