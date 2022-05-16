@@ -34,7 +34,7 @@ class LoginViewController: UIViewController {
     
     private let nicknameLabel: UILabel = {
         let label = UILabel()
-        label.text = "별명"
+        label.text = "닉네임"
         label.textAlignment = .center
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
