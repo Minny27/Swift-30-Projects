@@ -8,56 +8,43 @@
 import UIKit
 import Alamofire
 import NaverThirdPartyLogin
+import SnapKit
+import Then
 
 class LoginViewController: UIViewController {
 
     // MARK: - Properties
     let loginInstance = NaverThirdPartyLoginConnection.getSharedInstance()
     
-    private let nameLabel: UILabel = {
-        let label = UILabel()
-        label.text = "회원이름"
-        label.textAlignment = .center
-        label.textColor = .black
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    private let nameLabel = UILabel().then {
+        $0.text = "회원이름"
+        $0.textAlignment = .center
+        $0.textColor = .black
+    }
     
-    private let emailLabel: UILabel = {
-        let label = UILabel()
-        label.text = "이메일"
-        label.textAlignment = .center
-        label.textColor = .black
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    private let emailLabel = UILabel().then {
+        $0.text = "이메일"
+        $0.textAlignment = .center
+        $0.textColor = .black
+    }
     
-    private let nicknameLabel: UILabel = {
-        let label = UILabel()
-        label.text = "닉네임"
-        label.textAlignment = .center
-        label.textColor = .black
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    private let nicknameLabel = UILabel().then {
+        $0.text = "닉네임"
+        $0.textAlignment = .center
+        $0.textColor = .black
+    }
     
-    private let loginButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("로그인", for: .normal)
-        button.setTitleColor(UIColor.black, for: .normal)
-        button.addTarget(self, action: #selector(clickLoginButton), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
+    private let loginButton = UIButton().then {
+        $0.setTitle("로그인", for: .normal)
+        $0.setTitleColor(UIColor.black, for: .normal)
+        $0.addTarget(self, action: #selector(clickLoginButton), for: .touchUpInside)
+    }
     
-    private let logoutButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("로그아웃", for: .normal)
-        button.setTitleColor(UIColor.black, for: .normal)
-        button.addTarget(self, action: #selector(clickLogoutButton), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
+    private let logoutButton = UIButton().then {
+        $0.setTitle("로그아웃", for: .normal)
+        $0.setTitleColor(UIColor.black, for: .normal)
+        $0.addTarget(self, action: #selector(clickLogoutButton), for: .touchUpInside)
+    }
     
     // MARK: - LifeCycles
     override func viewDidLoad() {
@@ -69,45 +56,47 @@ class LoginViewController: UIViewController {
     
     private func setupUI() {
         view.addSubview(nameLabel)
-        nameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30).isActive = true
-        nameLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
-        nameLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
+        nameLabel.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(30)
+            $0.left.equalTo(view).offset(16)
+            $0.right.equalTo(view).offset(-16)
+        }
         
         view.addSubview(emailLabel)
-        emailLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 30).isActive = true
-        emailLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
-        emailLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
+        emailLabel.snp.makeConstraints {
+            $0.top.equalTo(nameLabel).offset(30)
+            $0.left.equalTo(view).offset(16)
+            $0.right.equalTo(view).offset(-16)
+        }
                 
         view.addSubview(nicknameLabel)
-        nicknameLabel.topAnchor.constraint(equalTo: emailLabel.bottomAnchor, constant: 30).isActive = true
-        nicknameLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
-        nicknameLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
+        nicknameLabel.snp.makeConstraints {
+            $0.top.equalTo(emailLabel).offset(30)
+            $0.left.equalTo(view).offset(16)
+            $0.right.equalTo(view).offset(-16)
+        }
         
         view.addSubview(loginButton)
-        loginButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
-        loginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30).isActive = true
-        loginButton.widthAnchor.constraint(equalToConstant: (view.frame.width - 32) / 2).isActive = true
+        loginButton.snp.makeConstraints {
+            $0.left.equalTo(view).offset(16)
+            $0.bottom.equalTo(view).offset(-30)
+            $0.width.equalTo((view.frame.width - 32) / 2)
+        }
         
         view.addSubview(logoutButton)
-        logoutButton.leftAnchor.constraint(equalTo: loginButton.rightAnchor).isActive = true
-        logoutButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30).isActive = true
-        logoutButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
-        
+        logoutButton.snp.makeConstraints {
+            $0.bottom.equalTo(view).offset(-30)
+            $0.right.equalTo(view).offset(-16)
+            $0.width.equalTo((view.frame.width - 32) / 2)
+        }
     }
     
     private func getNaverInfo() {
-        guard let isValidAccessToken = loginInstance?.isValidAccessTokenExpireTimeNow() else { return }
-        
-        if !isValidAccessToken {
-            return
-        }
+        guard let isValidAccessToken = loginInstance?.isValidAccessTokenExpireTimeNow(), isValidAccessToken else { return }
         
         guard let tokenType = loginInstance?.tokenType else { return }
         guard let accessToken = loginInstance?.accessToken else { return }
-        guard let url = URL(string: "https://openapi.naver.com/v1/nid/me") else {
-            print("Invlid Url!")
-            return
-        }
+        guard let url = URL(string: "https://openapi.naver.com/v1/nid/me") else { return }
         
         let authorization = "\(tokenType) \(accessToken)"
         
