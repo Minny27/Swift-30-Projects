@@ -6,10 +6,13 @@ target 'LoginExample' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
 
-  pod 'naveridlogin-sdk-ios'
   pod 'Alamofire'
   pod 'SnapKit', '~> 5.6.0'
   pod 'Then'
+  
+  # Login
+  pod 'naveridlogin-sdk-ios'
+  pod 'KakaoSDK'
   
   post_install do |installer_representation|
       installer_representation.pods_project.targets.each do |target|

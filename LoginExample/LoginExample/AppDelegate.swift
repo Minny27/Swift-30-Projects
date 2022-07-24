@@ -7,6 +7,8 @@
 
 import UIKit
 import NaverThirdPartyLogin
+import KakaoSDKCommon
+import KakaoSDKAuth
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -26,17 +28,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // 인증 화면 세로 모드로 설정
         instance?.isOnlyPortraitSupportedInIphone()
         
-        // 앱 등록할 때 입력한 URL Scheme
+        // URL Scheme
         instance?.serviceUrlScheme = kServiceAppUrlScheme
         
-        // 앱 등록 후 발급 받은 클라이언트 아이디
+        // 클라이언트 아이디
         instance?.consumerKey = kConsumerKey
         
-        // 앱 등록 후 발급 받은 클라이언트 시크릿
+        // 클라이언트 시크릿
         instance?.consumerSecret = kConsumerSecret
         
         // 앱 이름
         instance?.appName = kServiceAppName
+        
+        // Kakao SDK 초기화
+        KakaoSDK.initSDK(appKey: Storage.kakaoApiKey)
         
         return true
     }
@@ -47,6 +52,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NaverThirdPartyLoginConnection
             .getSharedInstance()
             .application(app, open: url, options: options)
+        
+        if AuthApi.isKakaoTalkLoginUrl(url) {
+            return AuthController.handleOpenUrl(url: url)
+        }
+        
         return true
     }
     

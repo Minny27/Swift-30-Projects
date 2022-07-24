@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		560F6885288D2DAB0005731C /* ApiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560F6884288D2DAB0005731C /* ApiManager.swift */; };
+		560F6888288D2F870005731C /* Naver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560F6887288D2F870005731C /* Naver.swift */; };
+		560F688A288D2F930005731C /* Kakao.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560F6889288D2F930005731C /* Kakao.swift */; };
+		560F688C288D2F9A0005731C /* Apple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560F688B288D2F9A0005731C /* Apple.swift */; };
+		5625BCE0288D5AA00080C266 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5625BCDF288D5AA00080C266 /* User.swift */; };
+		5625BCE2288D76F70080C266 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5625BCE1288D76F70080C266 /* Storage.swift */; };
+		5625BCE4288D7ED30080C266 /* UserDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5625BCE3288D7ED30080C266 /* UserDetailViewController.swift */; };
 		56813632282FDBF300EDD846 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56813631282FDBF300EDD846 /* AppDelegate.swift */; };
 		56813634282FDBF300EDD846 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56813633282FDBF300EDD846 /* SceneDelegate.swift */; };
 		56813636282FDBF300EDD846 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56813635282FDBF300EDD846 /* LoginViewController.swift */; };
@@ -36,6 +43,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		560F6884288D2DAB0005731C /* ApiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiManager.swift; sourceTree = "<group>"; };
+		560F6887288D2F870005731C /* Naver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Naver.swift; sourceTree = "<group>"; };
+		560F6889288D2F930005731C /* Kakao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kakao.swift; sourceTree = "<group>"; };
+		560F688B288D2F9A0005731C /* Apple.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Apple.swift; sourceTree = "<group>"; };
+		5625BCDF288D5AA00080C266 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		5625BCE1288D76F70080C266 /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
+		5625BCE3288D7ED30080C266 /* UserDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailViewController.swift; sourceTree = "<group>"; };
 		5681362E282FDBF300EDD846 /* LoginExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoginExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		56813631282FDBF300EDD846 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		56813633282FDBF300EDD846 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -87,6 +101,27 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		560F6886288D2F7B0005731C /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				560F6887288D2F870005731C /* Naver.swift */,
+				560F6889288D2F930005731C /* Kakao.swift */,
+				560F688B288D2F9A0005731C /* Apple.swift */,
+				5625BCDF288D5AA00080C266 /* User.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		5625BCDE288D3A120080C266 /* SupportingFiles */ = {
+			isa = PBXGroup;
+			children = (
+				5681363A282FDBF600EDD846 /* Assets.xcassets */,
+				5681363C282FDBF600EDD846 /* LaunchScreen.storyboard */,
+				5681363F282FDBF600EDD846 /* Info.plist */,
+			);
+			path = SupportingFiles;
+			sourceTree = "<group>";
+		};
 		56813625282FDBF300EDD846 = {
 			isa = PBXGroup;
 			children = (
@@ -112,12 +147,14 @@
 		56813630282FDBF300EDD846 /* LoginExample */ = {
 			isa = PBXGroup;
 			children = (
+				560F6886288D2F7B0005731C /* Model */,
 				56813635282FDBF300EDD846 /* LoginViewController.swift */,
 				56813631282FDBF300EDD846 /* AppDelegate.swift */,
 				56813633282FDBF300EDD846 /* SceneDelegate.swift */,
-				5681363A282FDBF600EDD846 /* Assets.xcassets */,
-				5681363C282FDBF600EDD846 /* LaunchScreen.storyboard */,
-				5681363F282FDBF600EDD846 /* Info.plist */,
+				560F6884288D2DAB0005731C /* ApiManager.swift */,
+				5625BCE3288D7ED30080C266 /* UserDetailViewController.swift */,
+				5625BCDE288D3A120080C266 /* SupportingFiles */,
+				5625BCE1288D76F70080C266 /* Storage.swift */,
 			);
 			path = LoginExample;
 			sourceTree = "<group>";
@@ -322,9 +359,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				560F6888288D2F870005731C /* Naver.swift in Sources */,
+				560F6885288D2DAB0005731C /* ApiManager.swift in Sources */,
+				560F688C288D2F9A0005731C /* Apple.swift in Sources */,
+				5625BCE4288D7ED30080C266 /* UserDetailViewController.swift in Sources */,
 				56813636282FDBF300EDD846 /* LoginViewController.swift in Sources */,
 				56813632282FDBF300EDD846 /* AppDelegate.swift in Sources */,
+				5625BCE2288D76F70080C266 /* Storage.swift in Sources */,
+				5625BCE0288D5AA00080C266 /* User.swift in Sources */,
 				56813634282FDBF300EDD846 /* SceneDelegate.swift in Sources */,
+				560F688A288D2F930005731C /* Kakao.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -497,7 +541,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3KZP62644C;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = LoginExample/Info.plist;
+				INFOPLIST_FILE = LoginExample/SupportingFiles/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -507,7 +551,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = seungmin.LoginExample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.seungmin.LoginExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -525,7 +569,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3KZP62644C;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = LoginExample/Info.plist;
+				INFOPLIST_FILE = LoginExample/SupportingFiles/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -535,7 +579,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = seungmin.LoginExample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.seungmin.LoginExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

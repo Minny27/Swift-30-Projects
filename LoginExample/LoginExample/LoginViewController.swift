@@ -7,43 +7,40 @@
 
 import UIKit
 import Alamofire
-import NaverThirdPartyLogin
 import SnapKit
 import Then
+import NaverThirdPartyLogin
+import KakaoSDKUser
 
 class LoginViewController: UIViewController {
-
+    
     // MARK: - Properties
     let loginInstance = NaverThirdPartyLoginConnection.getSharedInstance()
+    var userInfo: User? = nil
     
-    private let nameLabel = UILabel().then {
-        $0.text = "회원이름"
-        $0.textAlignment = .center
-        $0.textColor = .black
+    private let buttonStackView = UIStackView().then {
+        $0.axis = .vertical
+        $0.spacing = 10
     }
     
-    private let emailLabel = UILabel().then {
-        $0.text = "이메일"
-        $0.textAlignment = .center
-        $0.textColor = .black
+    private let naverLoginButton = UIButton().then {
+        $0.setImage(UIImage(named: "naver_login"), for: .normal)
+        $0.layer.cornerRadius = 10
+        $0.addTarget(self, action: #selector(clickNaverLoginButton), for: .touchUpInside)
     }
     
-    private let nicknameLabel = UILabel().then {
-        $0.text = "닉네임"
-        $0.textAlignment = .center
-        $0.textColor = .black
+    private let kakaoLoginButton = UIButton().then {
+        $0.setImage(UIImage(named: "kakao_login"), for: .normal)
+        $0.layer.cornerRadius = 10
+        $0.addTarget(self, action: #selector(clickKakaoLoginButton), for: .touchUpInside)
     }
     
-    private let loginButton = UIButton().then {
-        $0.setTitle("로그인", for: .normal)
-        $0.setTitleColor(UIColor.black, for: .normal)
-        $0.addTarget(self, action: #selector(clickLoginButton), for: .touchUpInside)
-    }
-    
-    private let logoutButton = UIButton().then {
-        $0.setTitle("로그아웃", for: .normal)
-        $0.setTitleColor(UIColor.black, for: .normal)
-        $0.addTarget(self, action: #selector(clickLogoutButton), for: .touchUpInside)
+    private let appleLoginButton = UIButton().then {
+        $0.setTitle("애플 로그인", for: .normal)
+        $0.setTitleColor(UIColor.white, for: .normal)
+        $0.backgroundColor = .black
+        $0.layer.cornerRadius = 10
+        $0.addTarget(self, action: #selector(clickNaverLoginButton), for: .touchUpInside)
     }
     
     // MARK: - LifeCycles
@@ -55,81 +52,97 @@ class LoginViewController: UIViewController {
     }
     
     private func setupUI() {
-        view.addSubview(nameLabel)
-        nameLabel.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(30)
-            $0.left.equalTo(view).offset(16)
-            $0.right.equalTo(view).offset(-16)
+        view.addSubview(buttonStackView)
+        buttonStackView.snp.makeConstraints {
+            $0.centerX.equalTo(view)
+            $0.centerY.equalTo(view)
         }
         
-        view.addSubview(emailLabel)
-        emailLabel.snp.makeConstraints {
-            $0.top.equalTo(nameLabel).offset(30)
+        buttonStackView.addArrangedSubview(naverLoginButton)
+        naverLoginButton.snp.makeConstraints {
             $0.left.equalTo(view).offset(16)
             $0.right.equalTo(view).offset(-16)
-        }
-                
-        view.addSubview(nicknameLabel)
-        nicknameLabel.snp.makeConstraints {
-            $0.top.equalTo(emailLabel).offset(30)
-            $0.left.equalTo(view).offset(16)
-            $0.right.equalTo(view).offset(-16)
+            $0.height.equalTo(50)
         }
         
-        view.addSubview(loginButton)
-        loginButton.snp.makeConstraints {
+        buttonStackView.addArrangedSubview(kakaoLoginButton)
+        kakaoLoginButton.snp.makeConstraints {
             $0.left.equalTo(view).offset(16)
-            $0.bottom.equalTo(view).offset(-30)
-            $0.width.equalTo((view.frame.width - 32) / 2)
+            $0.right.equalTo(view).offset(-16)
+            $0.height.equalTo(50)
         }
         
-        view.addSubview(logoutButton)
-        logoutButton.snp.makeConstraints {
-            $0.bottom.equalTo(view).offset(-30)
+        buttonStackView.addArrangedSubview(appleLoginButton)
+        appleLoginButton.snp.makeConstraints {
+            $0.left.equalTo(view).offset(16)
             $0.right.equalTo(view).offset(-16)
-            $0.width.equalTo((view.frame.width - 32) / 2)
+            $0.height.equalTo(50)
         }
     }
     
-    private func getNaverInfo() {
-        guard let isValidAccessToken = loginInstance?.isValidAccessTokenExpireTimeNow(), isValidAccessToken else { return }
-        
-        guard let tokenType = loginInstance?.tokenType else { return }
-        guard let accessToken = loginInstance?.accessToken else { return }
-        guard let url = URL(string: "https://openapi.naver.com/v1/nid/me") else { return }
-        
-        let authorization = "\(tokenType) \(accessToken)"
-        
-        let request = AF.request(
-            url,
-            method: .get,
-            parameters: nil,
-            encoding: JSONEncoding.default,
-            headers: ["Authorization": authorization]
-        )
-                        
-        request.responseJSON { response in
-            guard let result = response.value as? [String: Any] else { return }
-            guard let object = result["response"] as? [String: Any] else { return }
-            guard let name = object["name"] as? String else { return }
-            guard let email = object["email"] as? String else { return }
-            guard let nickname = object["nickname"] as? String else { return }
-            
-            self.nameLabel.text = name
-            self.emailLabel.text = email
-            self.nicknameLabel.text = nickname
-            
-            print(name)
-            print(email)
-            print(nickname)
+    private func setupNaverInfo() {
+        ApiManager().getNaverLoginInfo(loginInstance: loginInstance) {
+            self.userInfo = User(name: $0.response.name,
+                                 email: $0.response.email,
+                                 nickname: $0.response.nickname)
+            print("유저 정보: \(self.userInfo)")
+            self.sendUserInfo()
         }
     }
     
-    @objc func clickLoginButton() {
+    @objc func clickNaverLoginButton(_ sender: Any) {
         loginInstance?.delegate = self
         loginInstance?.requestThirdPartyLogin()
     }
-
+    
+    @objc func clickKakaoLoginButton(_ sender: Any) {
+        if UserApi.isKakaoTalkLoginAvailable() {
+            UserApi.shared.loginWithKakaoTalk { oAuthToken, error in
+                if let error = error {
+                    print(error)
+                } else {
+                    print("loginWithKakaoTalk() success.")
+                    
+                    self.setupKakaoInfo()
+                }
+            }
+        } else {
+            UserApi.shared.loginWithKakaoAccount { oAuthToken, error in
+                if let error = error {
+                    print(error)
+                } else {
+                    print("loginWithKakaoAccount() success.")
+                    
+                    let accessToken = oAuthToken?.accessToken
+                    
+                    self.setupKakaoInfo()
+                }
+            }
+        }
+    }
+    
+    func setupKakaoInfo() {
+        UserApi.shared.me { user, error in
+            if let error = error {
+                print(error)
+            } else {
+                print("me() success.")
+                
+                self.userInfo = User(name: user?.kakaoAccount?.name,
+                                email: user?.kakaoAccount?.email,
+                                nickname: user?.kakaoAccount?.profile?.nickname)
+            }
+            print("유저 정보: \(self.userInfo)")
+            self.sendUserInfo()
+        }
+    }
+    
+    func sendUserInfo() {
+        let userDetailViewController = UserDetailViewController()
+        userDetailViewController.userInfo = userInfo
+        navigationController?.pushViewController(userDetailViewController, animated: true)
+    }
+        
     @objc func clickLogoutButton() {
         loginInstance?.requestDeleteToken()
     }
@@ -139,7 +152,7 @@ extension LoginViewController: NaverThirdPartyLoginConnectionDelegate {
     
     func oauth20ConnectionDidFinishRequestACTokenWithAuthCode() {
         print("Success: Success Naver Login")
-        getNaverInfo()
+        setupNaverInfo()
     }
     
     func oauth20ConnectionDidFinishRequestACTokenWithRefreshToken() {
