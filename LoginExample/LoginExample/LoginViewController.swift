@@ -11,6 +11,7 @@ import SnapKit
 import Then
 import NaverThirdPartyLogin
 import KakaoSDKUser
+import AuthenticationServices
 
 class LoginViewController: UIViewController {
     
@@ -40,7 +41,7 @@ class LoginViewController: UIViewController {
         $0.setTitleColor(UIColor.white, for: .normal)
         $0.backgroundColor = .black
         $0.layer.cornerRadius = 10
-        $0.addTarget(self, action: #selector(clickNaverLoginButton), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(clickAppleLoginButton), for: .touchUpInside)
     }
     
     // MARK: - LifeCycles
@@ -121,6 +122,15 @@ class LoginViewController: UIViewController {
         }
     }
     
+    @objc func clickAppleLoginButton() {
+        let request = ASAuthorizationAppleIDProvider().createRequest()
+        request.requestedScopes = [.fullName, .email]
+        let controller = ASAuthorizationController(authorizationRequests: [request])
+        controller.delegate = self
+        controller.presentationContextProvider = self as? ASAuthorizationControllerPresentationContextProviding
+        controller.performRequests()
+    }
+    
     func setupKakaoInfo() {
         UserApi.shared.me { user, error in
             if let error = error {
@@ -129,8 +139,8 @@ class LoginViewController: UIViewController {
                 print("me() success.")
                 
                 self.userInfo = User(name: user?.kakaoAccount?.name,
-                                email: user?.kakaoAccount?.email,
-                                nickname: user?.kakaoAccount?.profile?.nickname)
+                                     email: user?.kakaoAccount?.email,
+                                     nickname: user?.kakaoAccount?.profile?.nickname)
             }
             print("유저 정보: \(self.userInfo)")
             self.sendUserInfo()
@@ -142,7 +152,7 @@ class LoginViewController: UIViewController {
         userDetailViewController.userInfo = userInfo
         navigationController?.pushViewController(userDetailViewController, animated: true)
     }
-        
+    
     @objc func clickLogoutButton() {
         loginInstance?.requestDeleteToken()
     }
@@ -166,5 +176,22 @@ extension LoginViewController: NaverThirdPartyLoginConnectionDelegate {
     
     func oauth20Connection(_ oauthConnection: NaverThirdPartyLoginConnection!, didFailWithError error: Error!) {
         print("[Error]: ", error.localizedDescription)
+    }
+}
+
+
+extension LoginViewController: ASAuthorizationControllerDelegate {
+    
+    @available(iOS 13.0, *)
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        if let credential = authorization.credential as? ASAuthorizationAppleIDCredential {
+            let user = credential.user      // 유저 아이디
+            let email = credential.email    // 유저 이메일
+            let userInfo = User(name: user, email: email, nickname: nil)
+            
+            let userDetailViewController = UserDetailViewController()
+            userDetailViewController.userInfo = userInfo
+            self.navigationController?.pushViewController(userDetailViewController, animated: true)
+        }
     }
 }

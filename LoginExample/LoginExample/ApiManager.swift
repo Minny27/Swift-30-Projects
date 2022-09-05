@@ -41,22 +41,6 @@ class ApiManager {
             let naverInfo = try! decoder.decode(Naver.self, from: data)
             completion(naverInfo)
         }
-        
-        //        request.responseJSON { response in
-        //            guard let result = response.value as? [String: Any] else { return }
-        //            guard let object = result["response"] as? [String: Any] else { return }
-        //            guard let name = object["name"] as? String else { return }
-        //            guard let email = object["email"] as? String else { return }
-        //            guard let nickname = object["nickname"] as? String else { return }
-        //
-        //            self.nameLabel.text = name
-        //            self.emailLabel.text = email
-        //            self.nicknameLabel.text = nickname
-        //
-        //            print(name)
-        //            print(email)
-        //            print(nickname)
-        //        }
     }
 }
 
